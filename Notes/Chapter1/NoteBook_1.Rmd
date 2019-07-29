@@ -1,0 +1,162 @@
+---
+title: "R Notebook_1"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Chapter 1 Introduction to Data
+
+## R and RStudio
+
+* R is a programming language.
+* RStudio is a R programming environment (IDE). 
+  + Panels: Console, Source, Environment, Plots
+  + Source: Run (*Ctrl+Enter*); Commenting
+  + Console: Automatic completion (Tab); Retrieving previous commands; Clear the console (*Ctrl+L*); Working directory
+* A R Notebook is an R markdown document with R code chunks that can be executed with output visible immediately beneath the input. 
+* To execute a code chunk, place your cursor inside it and press *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+## Package `openintro`
+
+* A package bundles together code, data and documentation.
+* A repository is where packages are stored. 
+* CRAN - Comprehensive R Archive Network
+* [openintro](https://github.com/OpenIntroStat/openintro-r-package)
+
+```{r}
+# download and install RTools 
+# https://cran.r-project.org/bin/windows/Rtools/
+# install.packages("glue")
+install.packages("devtools")
+library(devtools)
+install_github("openintrostat/openintro-r-package")
+```
+
+* The following datasets are included in the package. 
+
+```{r}
+data(package = "openintro")
+```
+
+## Read and Analyze Datasets
+
+* Load the package
+
+```{r}
+library(openintro)
+```
+
+* Understanding a dataset
+
+```{r}
+help("gpa")
+```
+
+```{r}
+# str() function displays the structure
+str(gpa)
+```
+
+```{r}
+# dim() displays the dimension
+dim(gpa)
+nrow(gpa)
+ncol(gpa)
+```
+
+```{r}
+# names() returns the variable names
+names(gpa)
+```
+
+```{r}
+# a factor variable
+class(gpa$gender)
+levels(gpa$gender)
+```
+
+* Accessing data
+
+```{r}
+# the first six observations
+head(gpa)
+```
+
+```{r}
+# the last six observations
+tail(gpa)
+```
+
+```{r}
+# indices start with 1
+gpa[1, 1]
+```
+
+```{r}
+# first row
+gpa[1,]
+```
+
+```{r}
+# second column
+gpa[, 2]
+```
+
+* Subsetting data
+
+```{r}
+# first and third rows/first, third and fifth columns
+gpa[c(1, 3), -c(2, 4)]
+```
+
+```{r}
+# variable gpa
+gpa$gpa
+```
+
+```{r}
+# 7 observations
+gpa[4:10,]
+```
+
+```{r}
+# a variable
+gpa$out[1:5]
+```
+
+```{r}
+# variable names
+gpa[c(1,3,5), c("gpa", "out")]
+```
+
+```{r}
+# a comparison expression
+gpa$gpa > 3.5
+```
+
+```{r}
+# add a filter
+gpa$out[gpa$gpa > 3.5]
+```
+
+```{r}
+# subset() returns a subset
+subset(gpa, gpa > mean(gpa) & out > mean(out))
+```
+
+## Scatter Plots
+
+```{r}
+# gpa and studyweek
+plot(gpa$studyweek, gpa$gpa, main = "Study Hours vs. GPA", xlab = "Weekly Study Hours", ylab = "GPA", xlim= c(0, max(gpa$studyweek)), ylim = c(2, 5), pch = 20, col = COL[1])
+```
+
+```{r}
+# median income and homeownership rate
+plot(county$multi_unit, county$homeownership, main = "Multi_Unit vs. Homeownership", xlab = "Perent of Units in Multi_unit Structures", ylab = "Homeownership Rate", xlim = c(0, max(county$multi_unit)), ylim = c(0, 100), pch = 20, col = COL[1])
+```
