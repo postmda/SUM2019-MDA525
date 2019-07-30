@@ -1,9 +1,15 @@
 ---
 title: "R Notebook_1"
-output:
-  html_document:
-    df_print: paged
+output: html_document
+html_notebook: default
+df_print: paged
+date: July 30, 2019
 ---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
 
 # Chapter 1 Introduction to Data
 
@@ -18,7 +24,7 @@ output:
 * To execute a code chunk, place your cursor inside it and press *Ctrl+Shift+Enter*. 
 
 ```{r}
-plot(cars)
+plot(datasets::cars)
 ```
 
 ## Package `openintro`
@@ -158,5 +164,5 @@ plot(gpa$studyweek, gpa$gpa, main = "Study Hours vs. GPA", xlab = "Weekly Study 
 
 ```{r}
 # median income and homeownership rate
-plot(county$multi_unit, county$homeownership, main = "Multi_Unit vs. Homeownership", xlab = "Perent of Units in Multi_unit Structures", ylab = "Homeownership Rate", xlim = c(0, max(county$multi_unit)), ylim = c(0, 100), pch = 20, col = COL[1])
+plot(county$multi_unit, county$homeownership, main = "Multi_Unit vs. Homeownership", xlab = "Percent of Units in Multi_unit Structures", ylab = "Homeownership Rate", xlim = c(0, max(county$multi_unit)), ylim = c(0, 100), pch = 20, col = COL[1])
 ```
