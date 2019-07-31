@@ -1,0 +1,398 @@
+---
+title: "R Notebook_2"
+output: html_document
+html_notebook: default
+df_print: paged
+date: July 31, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Chapter 2 Summarizing Data
+
+* Load the openintro Package
+
+```{r}
+library(openintro)
+```
+
+## Visualizing Numerical Data
+
+* Dot plots
+
+```{r}
+x <- loan50$interest_rate
+dotPlot(x, xlim = c(0.9 * min(x), 1.05 * max(x)), ylim = c(0.96, 1.05), xlab = "Interest rate", ylab = "", at = 1.007, pch = 20, col = COL[1], cex = 2, axes = F)
+abline(h = 0.98)
+AxisInPercent(1, pretty(c(0, x)))
+Avg = mean(x)
+polygon(Avg + c(-1, 0, 1) * 1, c(0.96, 0.98, 0.96), col = COL[4], border = COL[4])
+```
+
+* Stacked Dot plots
+
+```{r}
+x <- loan50$interest_rate
+# round x to the nearest percent
+y <- round(x)
+stripchart(y, method = "stack", offset = 1/3, xlim = c(0.9 * min(y), 1.05 * max(y)), ylim = c(0, 10), xlab = "Interest rate, Rounded to the Nearest Percent", ylab = "", at = 1, pch = 20, col = COL[1], cex = 2, axes = F)
+abline(h = 0.2)
+AxisInPercent(1, pretty(c(0, y)))
+Avg = mean(x)
+polygon(Avg + c(-2, 0, 2) * 1, c(-1, 0.2, -1), col = COL[4], border = COL[4])
+```
+
+* Histograms
+
+```{r}
+hist(x, breaks = 5, xlab = "Interest Rate", ylab = "Frequency", main = "Counts for the binned interest rate data", xlim = c(0, 1.25 * max(x)), ylim = c(0, 30), col = COL[1], border = COL[5], axes = F)
+abline(h = 0)
+axis(2)
+AxisInPercent(1, pretty(x))
+```
+
+* Box plots
+
+```{r}
+boxplot(x, ylab = "Interest Rate", xlim = c(0.3, 3), axes = F, ylim = range(x) + sd(x) * c(-1, 1) * 0.5)
+AxisInPercent(2, c(0, pretty(x)))
+arrows(2, min(x) + 1, 1.35, min(x), length = 0.08)
+text(2, min(x) + 1, 'lower whisker', pos = 4)
+
+arrows(2, quantile(x, 0.25) + sd(x) / 7,
+       1.35, quantile(x, 0.25),
+       length = 0.08)
+text(2, quantile(x, 0.25) + sd(x)/6.5,
+     expression(Q[1]~~'(first quartile)'), pos = 4)
+
+m <- median(x)
+arrows(2, m + sd(x) / 5, 1.35, m, length = 0.08)
+text(2,m + sd(x) / 4.7, 'median', pos = 4)
+
+q <- quantile(x, 0.75)
+arrows(2, q + sd(x) / 4, 1.35, q, length = 0.08)
+text(2, q + sd(x) / 3.8,
+     expression(Q[3]~~'(third quartile)'), pos = 4)
+
+arrows(2, rev(sort(x))[3] - sd(x) / 4,
+       1.35, rev(sort(x))[3], length = 0.08)
+text(2, rev(sort(x))[3] - sd(x) / 3.8,
+     'upper whisker', pos = 4)
+
+z <- quantile(x, 0.75) + 1.5 * IQR(x)
+arrows(2, z - 0.1 * sd(x),
+       1.35, z, length = 0.08)
+lines(c(0.72, 1.28), rep(z, 2),
+      lty = 3, col = '#00000066')
+text(2, z - 0.1 * sd(x),
+     'max whisker reach', pos = 4)
+
+m <- rev(tail(sort(x), 5))
+s <- m[1] - 0.3 * sd(m)
+arrows(2, s, 1.1, m[1] - 0.2, length = 0.08)
+arrows(2, s, 1.1, m[2] + 0.3, length = 0.08)
+text(2, s, 'suspected outliers', pos = 4)
+
+```
+
+* Transforming data
+
+```{r}
+# original population data 
+pop = county$pop2017
+hist(pop, breaks = 12, main = "", xlab = "Population (M = million)", ylab = "Frequency", axes = F, col = COL[1], border = COL[5])
+axis(2)
+axis(1, at = pretty(pop), paste0(pretty(pop/1.0e6), "M"))
+```
+
+
+```{r}
+# log-transformed population data 
+hist(log(pop, 10), breaks = 12, main = "", xlab = expression(log[10]*"(Population)"), ylab = "Frequency", axes = F, col = COL[1], border = COL[5])
+axis(2)
+axis(1)
+```
+
+## Summary Measures for Numerical Data
+
+* summary() function
+
+```{r}
+summary(x)
+```
+
+* Measures of central location
+
+```{r}
+# mean(x, na.rm = T) 
+mean(x)
+# median(x, na.rm = T) 
+median(x)
+# mode
+Mode <- function(d) {
+  ud <- unique(d)
+  ud[which.max(tabulate(match(d, ud)))]
+}
+Mode(x)
+```
+
+* Measures of variability
+
+```{r}
+# range
+range(x)
+min(x)
+max(x)
+
+# sample var
+var(x)
+# population var
+var(x) * (length(x) - 1) / length(x)
+
+# sample std
+sd(x)
+# population std
+sd(x) * sqrt((length(x) - 1) / length(x))
+```
+
+* Measures of relative standing
+
+```{r}
+# quartiles
+quantile(x)
+
+# IQR
+IQR(x)
+
+# Percentile
+quantile(x, 0.2)
+```
+
+## Visualizing Categorical Data
+
+* A One-way Contingency Table
+
+```{r}
+ho <-  loans_full_schema$homeownership
+ho <-  droplevels(ho)
+tbl1 <-  addmargins(table(ho), margin = 1)
+names(tbl1) <-  tolower(names(tbl1))
+names(tbl1)[4] <- "total"
+tbl1 <-  tbl1[c("rent", "mortgage", "own", "total")]
+tbl1
+```
+
+* A Two-way Contingency Table
+
+```{r}
+app <-  loans_full_schema$application_type
+app <-  droplevels(app)
+tbl2 <-  table(app, ho)
+colnames(tbl2) <-  tolower(colnames(tbl2))
+tbl2 <- tbl2[, c("rent", "mortgage", "own")]
+tbl2
+tbl3 <- addmargins(tbl2, margin = c(1, 2))
+colnames(tbl3)[4] <- "total"
+rownames(tbl3)[3] <- "total"
+tbl3
+```
+
+* A two-way contingency table of proportions
+
+```{r}
+tbl2.prop = prop.table(tbl2)
+tbl3.prop = addmargins(tbl2.prop, margin = c(1,2))
+colnames(tbl3.prop)[4] <- "total"
+rownames(tbl3.prop)[3] <- "total"
+round(tbl3.prop, 3)
+```
+
+* A two-way contingency table of row proportions
+
+```{r}
+tbl2.prop = prop.table(tbl2, margin = 1)
+tbl3.prop = addmargins(tbl2.prop, margin = 2)
+colnames(tbl3.prop)[4] <- "total"
+round(tbl3.prop, 3)
+```
+
+* A two-way contingency table of column proportions
+
+```{r}
+tbl2.prop = prop.table(tbl2, margin = 2)
+tbl3.prop = addmargins(tbl2.prop, margin = 1)
+rownames(tbl3.prop)[3] <- "total"
+round(tbl3.prop, 3)
+```
+
+* Bar plots
+
+```{r}
+barplot(tbl1[1:3],
+        axes = TRUE,
+        xlab = '',
+        ylab = 'Frequency',
+        main = '',
+        ylim = c(0, 1.2 * max(tbl1[1:3])),
+        col = COL[1])
+abline(h = 0)
+mtext("Homeownership", 1, 2.4)
+```
+
+* Stacked bar plots
+
+```{r}
+ylim <- c(0, 1.2 * max(apply(tbl2, 2, sum)))
+barplot(apply(tbl2, 2, sum),
+    col = COL[3],
+    ylim = ylim)
+tblTemp <- tbl2[1,]
+names(tblTemp) <- NULL
+barplot(tblTemp,
+    col = COL[1],
+    add = TRUE,
+    axes = FALSE)
+abline(h = 0)
+legend("topright",
+    fill = COL[c(3,1)],
+    legend = c("joint", "individual"))
+par(las = 0)
+mtext("Frequency", 2, 2.9)
+```
+
+* Side-by-side bar plots
+
+```{r}
+barplot(tbl2,
+    ylim = c(0, max(tbl2)),
+    col = COL[c(1, 3)], beside = TRUE)
+abline(h = 0)
+legend("topright",
+    fill = COL[c(3,1)],
+    legend = c("joint", "individual"))
+par(las = 0)
+mtext("Frequency", 2, 2.9)
+```
+
+* Standardized bar plots
+
+```{r}
+barplot(apply(tbl2, 2, sum) / apply(tbl2, 2, sum), col = COL[3])
+tbl2.prop = prop.table(tbl2, margin = 2)
+tblTemp <- tbl2.prop[1, ]
+names(tblTemp) <- NULL
+barplot(tblTemp,
+    col = COL[1],
+    add = TRUE,
+    axes = FALSE)
+legend(2.65, 0.3,
+    fill = COL[c(3,1)],
+    legend = c("joint", "individual"),
+    bg = "white")
+abline(h = 0)
+par(las = 0)
+mtext("Proportion", 2, 2.9)
+```
+
+* Mosaic plots
+
+```{r}
+# a one-variable mosaic plot
+mosaicplot(tbl1[1:3],
+           main = '',
+           xlab = '',
+           ylab = '',
+           off = 4,
+           col = COL[c(2, 1, 4)])
+
+# a two-variable mosaic plot
+mosaicplot(t(tbl2), xlab = "", ylab = "", main = "", col = COL[c(1, 2, 4)])
+```
+
+* Pie chars
+
+```{r}
+pie(table(ho), col = COL[c(1, 2, 4)])
+```
+
+* Side-by-side box plots
+
+```{r}
+boxplot(loans_full_schema$loan_amount ~ droplevels(loans_full_schema$homeownership), col = COL[c(1, 2, 4)], ylab = "Loan Amount", xlab = "Homeownership")
+```
+
+* Hollow histograms
+
+```{r}
+cc  <- county
+popch <- sign(cc$pop2017 - cc$pop2010 - 0.5)
+# sum(is.na(popch))
+pov <- cc$median_hh_income
+popch[popch == 1] <- "Gain"
+popch[popch == -1] <- "No Gain"
+xlim <- range(pov[popch == 'No Gain'], na.rm = TRUE)
+histPlot(pov[popch == 'No Gain'],
+         breaks = 50,
+         col = '#ffffff00',
+         border = COL[4],
+         probability = TRUE,
+         xlim = xlim,
+         xlab = 'Median Household Income',
+         ylab = '',
+         hollow = TRUE,
+         axes = FALSE,
+         lty = 3,
+         lwd = 4)
+histPlot(pov[popch == 'No Gain'],
+         breaks = 50,
+         col = '#ffffff00',
+         border = COL[4],
+         probability = TRUE,
+         add = TRUE,
+         hollow = TRUE,
+         lty = 3,
+         lwd = 2)
+histPlot(pov[popch == 'No Gain'],
+         breaks = 50,
+         col = '#ffffff00',
+         border = COL[4],
+         probability = TRUE,
+         add = TRUE,
+         hollow = TRUE,
+         lty = 3,
+         lwd = 1)
+histPlot(pov[popch == 'Gain'],
+         breaks = 50,
+         col = '#ffffff00',
+         border = COL[1],
+         probability = TRUE,
+         add = TRUE,
+         hollow = TRUE,
+         lty = 1,
+         lwd = 2)
+AxisInDollars(1, at = pretty(xlim))
+legend('topright',
+       col = COL[c(1,4)],
+       lty = c(1,3),
+       lwd = c(2,2.8),
+       legend = c('Gain', 'No Gain'))
+legend('topright',
+       col = c(rgb(0,0,0,0), COL[4]),
+       lty = c(1, 3),
+       lwd = c(2,1.4),
+       legend = c('Gain', 'No Gain'),
+       bg = rgb(0,0,0,0),
+       box.col = rgb(0,0,0,0),
+       text.col = rgb(0,0,0,0))
+legend('topright',
+       col = c(rgb(0,0,0,0), COL[4]),
+       lty = c(1, 3),
+       lwd = c(2,0.7),
+       legend = c('Gain', 'No Gain'),
+       bg = rgb(0,0,0,0),
+       box.col = rgb(0,0,0,0),
+       text.col = rgb(0,0,0,0))
+```
