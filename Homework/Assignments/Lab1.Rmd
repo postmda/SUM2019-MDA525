@@ -1,0 +1,145 @@
+---
+title: "R Lab 1"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 1, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Lab 1 Introduction to R
+
+To get you started, run the following R code chuck. 
+
+```{r load-abrbuthnot-data, eval=TRUE}
+source("http://www.openintro.org/stat/data/arbuthnot.R")
+```
+
+This command instructs R to access the OpenIntro website and fetch some data: the Arbuthnot baptism counts for boys and girls. A description of the dataset is available at the [OpenIntro website](https://www.openintro.org/stat/data/?data=arbuthnot). 
+
+## The Data: Dr. Arbuthnot's Baptism Records
+
+R has stored Arbuthnot's data in a *data frame*. The name of the data frame is `arbuthnot`. 
+
+```{r}
+####################################
+# TODO 1:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the number of rows and #
+# the number of columns in the     #
+# arbuthnot dataset.               #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 2:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the names of all       #
+# variables.                       #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 3:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the number of boys     #
+# baptized in the first 3 years.   #                       #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 4:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the numbers of boys    #
+# and girls baptized, respectively,#
+# in the first 3 years.            #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 5:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the years in which     #
+# boys baptized outnumbered the    #
+# yearly average of boys.          #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 6:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to create a scatter plot for     #
+# the number of boys baptized vs.  #
+# the number of girls baptized.    #
+#                                  #
+####################################
+
+```
+
+
+```{r}
+####################################
+# TODO 7:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to create a plot that shows how  #
+# the number of girls              #
+# evolved over years. To connect   #
+# the points with lines, you may   #
+# add "l" as the third argument    #
+# to the plot() function.          #
+#                                  #
+####################################
+
+```
+
+
+```{r}
+####################################
+# TODO 8:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to compute the total number of   #
+# baptisms each year.              #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 9                           #  
+#                                  #
+# Write R code in this code chunk  #
+# to create a plot that shows how  #
+# the proportion of boys evolved   #
+# over years.                      #
+#                                  #
+####################################
+
+```
