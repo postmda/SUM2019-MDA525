@@ -1,0 +1,240 @@
+---
+title: "R Lab 2"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 8, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Lab 2 Summarizing Data
+
+To get you started, run the following R code chunk. 
+
+```{r load-data, eval=FALSE}
+source("http://www.openintro.org/stat/data/cdc.R")
+```
+
+The Behavioral Risk Factor Surveillance System (BRFSS) is an annual telephone survey of 350,000 people in the United States. As its name implies, the BRFSS is designed to identify risk factors in the adult population and report 
+emerging health trends. 
+
+The data set `cdc` contains data of a random sample of 20,000 people from the BRFSS survey conducted in 2000. 
+
+## The Data
+
+R has stored the data in a *data frame*. The name of the object is `cdc`. 
+
+```{r}
+####################################
+# TODO 1:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the number of rows and #
+# the number of columns in the     #
+# cdc dataset.                     #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 2:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the names of the       #
+# variables.                       #
+#                                  #
+####################################
+
+```
+
+This returns the names `genhlth`, `exerany`, `hlthplan`, `smoke100`, `height`, `weight`, `wtdesire`, `age`, and `gender`. Each one of these variables corresponds to a question that was asked in the survey.  For example, for 
+`genhlth`, respondents were asked to evaluate their general health, responding either excellent, very good, good, fair or poor. The `exerany` variable indicates whether the respondent exercised in the past month (1) or did not (0).
+Likewise, `hlthplan` indicates whether the respondent had some form of health coverage (1) or did not (0). The `smoke100` variable indicates whether the 
+respondent had smoked at least 100 cigarettes in her lifetime. The other variables record the respondent's `height` in inches, `weight` in pounds as well
+as their desired weight, `wtdesire`, `age` in years, and `gender`.
+
+```{r}
+####################################
+# TODO 3:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the first six          #
+# observations (rows of data).     #
+# This helps you understand the    #                      
+# data type of each variable.      #
+#                                  #
+####################################
+
+```
+
+## Summaries, tables and charts
+
+A good first step in any analysis is to distill all information into a few summary statistics and graphics. As an example, let's summarize a numerical variable `weight`.
+
+```{r}
+####################################
+# TODO 4:                          #   
+#                                  #
+# Call the `summary` function to   #
+# output several summary statistics#
+# for variable `weight'.           #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 5:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the mean, median,      #
+# variance, standard deviation,    #
+# and IQR of variable `weight`.    #
+#                                  #
+####################################
+
+
+```
+
+
+```{r}
+####################################
+# TODO 6:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to generate a histogram for      #
+# `weight`.                        #
+#                                  #
+####################################
+
+```
+
+what about categorical data?  We would instead consider the
+sample frequency or relative frequency distribution.  The function `table` does this for you by counting the number of times each kind of response was given. Take the variable `smoke100` as an instance. 
+
+```{r}
+####################################
+# TODO 7:                          #   
+#                                  #
+# Call the `table` function to     #
+# output the frequency             #
+# distribution of `smoke100`.      #
+#                                  #
+####################################
+
+```
+
+To get the relative frequency distribution, nest the `table` function inside the `prop.table` function.
+
+```{r}
+####################################
+# TODO 8:                          #   
+#                                  #
+# Call the `prop.table` function   #
+# to output the relative frequency #
+# distribution of `smoke100`.      #   
+# Hint: put the `table` function   #
+# inside the `prop.table`          #
+# function.                        #
+#                                  #
+####################################
+
+```
+
+```{r}
+####################################
+# TODO 9                           #  
+#                                  #
+# Write R code in this code chunk  #
+# to output a bar chart for        #
+# `smoke100`.                      #
+# Hint: put the `table` function   #
+# inside the `barplot` function.   #
+#                                  #
+####################################
+
+```
+
+The `table` function can also be called to create a two-way contingency table. 
+
+```{r}
+####################################
+# TODO 10                          #  
+#                                  #
+# Write R code in this code chunk  #
+# to output a contingency table,   #
+# which summarizes participants    #
+# who have smoked by gender.       #
+#                                  #
+####################################
+
+```
+
+The `mosaicplot` function can be applied to create a mosaic plot of the above table. 
+
+```{r}
+####################################
+# TODO 11                          #  
+#                                  #
+# Write R code in this code chunk  #
+# to output a mosaic plot of the   #
+# contingency table created in     #
+# TODO 10.                         #
+#                                  #
+####################################
+
+```
+
+## Comparing numerical data across groups
+
+The purpose of a side-by-side boxplot is to provide a 
+thumbnail sketch of a variable for the purpose of comparing across several categories.
+
+```{r}
+####################################
+# TODO 12                          #  
+#                                  #
+# Write R code in this code chunk  #
+# to output a side-by-side boxplot #
+# that compares the weights of men #
+# and women.                       #
+# Hint: place `cdc$weight ~        #
+# cdc$gender` inside the `boxplot` #
+# function. The `~` character can  #
+# be read 'versus' or 'as a        #
+# function of'. So we're asking R  #
+# to give us a box plot of weights #
+# where the groups are defined by  #
+# gender.                          # 
+#                                  #
+####################################
+
+```
+
+Body Mass Index (BMI) is a weight to height ratio and can be calculated as: BMI = weight/(height * height) * 703
+
+\[ BMI = \frac{weight~(lb)}{height~(in)^2} * 703 \]
+
+Next, we will create a side-by-side box plot of BMI where the groups are defined by variable `genhlth`.
+
+```{r}
+####################################
+# TODO 13                          #  
+#                                  #
+# Write R code in this code chunk  #
+# to output a side-by-side boxplot #
+# to compare BMI across different  # 
+# levels of health.                #
+#                                  #
+####################################
+
+```
+
+
