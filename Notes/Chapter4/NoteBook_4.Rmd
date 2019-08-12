@@ -1,0 +1,96 @@
+---
+title: "R Notebook_4"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 8, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Chapter 4 Distributions of Random Variables
+
+## Simulating the Binomial Distribution
+
+The binomial distribution is used to describe the number of successes in a fixed number of Bernoulli trials (the outcome of each trial is either a success or a failure). 
+
+* Sampling from a large population
+
+```{r}
+pop.size = 1E4
+# probability of a success
+prob.y = 0.4
+sp.size = 10
+# number of samples
+sps <- 1E3
+# construct the population
+pop.entries <- c(rep("y", pop.size * prob.y), rep("n", pop.size * (1 - prob.y)))
+# computing the number of successes in each sample
+set.seed(12345)
+# generate 1000 random samples with a sample size of 10
+sp.ones <-  replicate(sps, sum(sample(pop.entries, sp.size, replace = F) == "y"))
+# analyzing the simulation results
+hist(sp.ones)
+prop.table(table(sp.ones))
+mean(sp.ones)
+sd(sp.ones)
+```
+
+
+* Sampling from a small population
+
+```{r}
+pop.size <-  50
+# construct the population
+pop.entries <- c(rep("y", pop.size * prob.y), rep("n", pop.size * (1 - prob.y)))
+# sampling without replacement
+set.seed(12345)
+sp.ones <- replicate(sps, sum(sample(pop.entries, sp.size, replace = F) == "y"))
+# analyzing the simulation resultshist(sp.ones)
+prop.table(table(sp.ones))
+mean(sp.ones)
+sd(sp.ones)
+```
+
+## Normal Distribution
+
+Suppose random variable X is normally distributed with mean 50 and sd 12.
+
+* R functions
+
+```{r}
+x <- 65
+mean <- 50
+sd <- 12
+# density function value f(x)
+dnorm(x, mean, sd)
+# P(X < x)
+pnorm(x, mean, sd)
+# P (X > x)
+pnorm(x, mean, sd, lower.tail = F)
+# P(0.5x < X < x)
+pnorm(x, mean, sd) - pnorm(0.5*x, mean, sd)
+# y such that P(X < y) = 0.75
+prob <- 0.75
+qnorm(prob, mean, sd)
+# y such that P(X > y) = 0.9
+prob <- 0.9
+qnorm(prob, mean, sd, lower.tail = F)
+# generate ten random numbers
+size <- 10
+rnorm(size, mean, sd)
+```
+
+* Evaluating the normal distribution
+
+```{r}
+size  <-  20
+normdata <- rnorm(size, mean, sd)
+# producing a normal qqplot (quantile-quantile plot) to check # normality; the distribution is normal if the points are close to form a straight line.  
+qqnorm(normdata)
+# add a "theoretical" line
+qqline(normdata)
+```
