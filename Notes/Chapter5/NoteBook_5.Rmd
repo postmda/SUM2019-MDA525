@@ -1,0 +1,64 @@
+---
+title: "R Notebook_5"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 12, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Chapter 5 Foundations for Inference
+
+## Simulating the Sampling Distributions
+
+* Sample proportions
+
+```{r}
+pop.size = 1E5
+# probability of a success
+prob.y = 0.4
+sp.size = 100
+# number of samples
+sps = 1E4
+# construct the population
+pop.entries = c(rep("y", pop.size * prob.y), rep("n", pop.size * (1 - prob.y)))
+# computing the sample proportion in each sample
+set.seed(12345)
+sp.props = replicate(sps, mean(sample(pop.entries, sp.size, replace = F) == "y"))
+# analyzing the simulation results
+hist(sp.props)
+mean(sp.props)
+sd(sp.props)
+# checking normality
+qqnorm(sp.props)
+qqline(sp.props)
+```
+
+## Simulating the Sampling Distributions
+
+* Sample proportions
+
+```{r}
+pop.size = 1E5
+# probability of a success
+prob.y = 0.4
+sp.size = 100
+# number of samples
+sps = 1E3
+# construct the population
+pop.entries = c(rep("y", pop.size * prob.y), rep("n", pop.size * (1 - prob.y)))
+# computing the sample proportion in each sample
+set.seed(12345)
+sp.props = replicate(sps, mean(sample(pop.entries, sp.size, replace = F) == "y"))
+# constructing confidence intervals with alpha = 5%
+# lcl and ucl are vectors
+phat.sd = sqrt(sp.props*(1-sp.props)/sp.size)
+lcl = sp.props - 1.96 * phat.sd
+ucl = sp.props + 1.96 * phat.sd
+# what percent of the intervals contain the population proportion
+mean(lcl < prob.y & prob.y < ucl)
+```
