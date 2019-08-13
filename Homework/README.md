@@ -1,5 +1,9 @@
 # Homework
 
+## Homework 5 due August 14
+1. Read Text Sections 3.4, 3.5 and 4.1.  
+2. Write Quiz 3 (due August 19) in the Quizzes folder. You may turn in a hard copy or submit an e-copy by email. 
+
 ## Homework 4 due August 12
 1. Read Text Sections 3.1 and 3.2.  
 2. Complete Assignment 2. You may turn in a hard copy or submit an e-copy.
