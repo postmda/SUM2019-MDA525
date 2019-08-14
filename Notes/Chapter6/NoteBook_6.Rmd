@@ -1,0 +1,268 @@
+---
+title: "R Notebook_6"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 14, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Chapter 6 Inference for Categorical Data
+
+## A Population Proportion
+
+Chapter 5 Exercise
+
+n = 100
+phat = 45/100
+alpha = 0.05
+
+* 95% Confidence Interval 
+
+```{r}
+# sample size
+n <- 100
+# sample proportion
+phat <- 45/100
+# significance level
+alpha <- 0.05
+
+# standard error
+se <- sqrt(phat * (1 - phat) / n)
+# margin of error
+me <- qnorm(alpha / 2, lower.tail = F) * se
+# lower confidence limit
+lcl <- phat - me
+# upper confidence limit
+ucl <- phat + me
+lcl
+ucl
+```
+
+* Two-sided Hypothesis Testing 
+null: p = 0.5
+alternative: p <> 0.5
+
+```{r}
+# sample size
+n <- 100
+# sample proportion
+phat <- 45/100
+# significance level
+alpha <- 0.05
+# hypothesized parameter
+p <- 0.5
+
+# standard deviation
+stdev <- sqrt(p * (1 - p) / n)
+# z-statistic
+z <- (phat - p) / stdev
+# p-value
+pv <- 2 * pnorm(abs(z), lower.tail = F)
+pv
+```
+
+## Difference of Two Population Proportions
+
+Chapter 6 Exercise
+
+n1 = 800
+phat1 = 460/800
+n2 = 1000
+phat2 = 520/1000
+alpha = 0.05
+
+* 95% Confidence Interval 
+
+```{r}
+# sample sizes
+n1 <- 800
+n2 <- 1000
+# sample proportions
+phat1 <- 460 / 800
+phat2 <- 520 / 1000
+# significance level
+alpha <- 0.05
+
+# sample difference
+phatdif <- phat1 - phat2
+# standard error
+se <- sqrt(phat1 * (1 - phat1) / n1 + phat2 * (1 - phat2) / n2)
+# margin of error
+me <- qnorm(alpha / 2, lower.tail = F) * se
+# lower confidence limit
+lcl <- phatdif - me
+# upper confidence limit
+ucl <- phatdif + me
+lcl
+ucl
+```
+
+* Two-sided Hypothesis Testing 
+
+Hypotheses
+null: p1 = p2
+alternative: p1 <> p2
+
+```{r}
+# sample sizes
+n1 <- 800
+n2 <- 1000
+# sample proportions
+phat1 <- 460 / 800
+phat2 <- 520 / 1000
+phatpooled <- (460 + 520) / (n1 + n2) 
+# significance level
+alpha <- 0.05
+
+# sample difference
+phatdif <- phat1 - phat2
+# standard deviation
+stdev <- sqrt(phatpooled * (1 - phatpooled) / n1 + phatpooled * (1 - phatpooled) / n2)
+
+# z-statistic; note the hypothesized parameter is zero
+z <- phatdif / stdev
+# p-value
+pv <- 2 * pnorm(abs(z), lower.tail = F)
+pv
+```
+
+* One-sided Hypothesis Testing 
+
+Hypotheses
+null: p1 = p2
+alternative: p1 > p2
+
+```{r}
+# sample sizes
+n1 <- 800
+n2 <- 1000
+# sample proportions
+phat1 <- 460 / 800
+phat2 <- 520 / 1000
+phatpooled <- (460 + 520) / (n1 + n2) 
+# significance level
+alpha <- 0.05
+
+# sample difference
+phatdif <- phat1 - phat2
+# standard deviation
+stdev <- sqrt(phatpooled * (1 - phatpooled) / n1 + phatpooled * (1 - phatpooled) / n2)
+
+# z-statistic; note the hypothesized parameter is zero
+z <- phatdif / stdev
+# p-value P(Z > z)
+pv <- pnorm(z, lower.tail = F)
+pv
+```
+
+## Testing for Goodness of Fit
+
+Chapter 6 Example
+
+One-way table:
+
+Observed counts 205, 26, 25, 19
+Expected proportions 0.72, 0.07, 0.12, 0.09 
+
+Hypotheses
+null: sample from the same population
+alternative: sample from a different population
+
+```{r}
+# observed counts
+obs <-  c(205, 26, 25, 19) 
+# expected proportions
+est_props <-  c(0.72, 0.07, 0.12, 0.09)
+# significance level
+alpha <-  0.05
+
+# expected counts
+est <- sum(obs) * est_props
+
+# chi-square statistic
+chi <- sum((obs - est) ** 2 / est)
+# p-value P(X^2 > chi); df = 3
+pv <- pchisq(chi, length(obs) - 1, lower.tail = F)
+pv
+```
+
+## Testing for Independence
+
+Chapter 6 Example
+
+Two-way table
+
+2 23 36
+71 50 37
+
+Hypotheses
+null: independence
+alternative: dependence
+
+```{r}
+# observed counts
+obs <-  matrix(c(2, 23, 36, 71, 50, 37), nrow = 2, ncol = 3, byrow = T)
+# significance level
+alpha <-  0.05
+
+# expected counts
+rowtotals <-  apply(obs, 1, sum)
+coltotals <-  apply(obs, 2, sum)
+est <-  rowtotals %*% t(coltotals) / sum(obs)
+
+# chi-square statistic
+chi <-  sum((obs - est) ** 2 / est)
+# p-value P(X^2 > chi); df = 2
+pv <-  pchisq(chi, (nrow(obs) - 1) * (ncol(obs) - 1), lower.tail = F)
+pv
+```
+
+## R `inference()` function
+
+Construct the population
+
+```{r}
+# The first list of the `pew_energe_2018` data set is the population.
+pop <-  unlist(openintro::pew_energy_2018[1])
+pop.prop <-  mean(pop == "favor_increase")
+pop.prop
+```
+
+Sample the population
+
+```{r}
+# Create a set of 10 million entries, where 88.9% are "yes", while 11.1% are "no".
+pop.size <-  1e7
+allentries <- c(rep("yes", pop.size * pop.prop), rep("no", pop.size * (1 - pop.prop)))
+# Sample 1000 entries without replacement
+sp.size = 1e3
+sp = sample(allentries, sp.size, replace = F)
+# sample proportion
+sp.prop = mean(sp == "yes")
+sp.prop
+```
+
+Apply the `inference` function
+
+* Confidence interval
+
+```{r}
+inference(sp, est = "proportion", success = "yes", method = "theoretical", conflevel = 0.9, type = "ci")
+```
+
+* Two-sided Hypothesis Testing
+
+```{r}
+inference(sp, est = "proportion", success = "yes", method = "simulation", type = "ht", null = 0.88, alternative = "twosided")
+```
+
+* One-sided Hypothesis Testing
+
+```{r}
+inference(sp, est = "proportion", success = "yes", method = "simulation", type = "ht", null = 0.88, alternative = "greater")
+```
