@@ -1,0 +1,196 @@
+---
+title: "R Lab 3"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 15, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Lab 3 Inference on Categorical Data
+
+A survey conducted by WIN-Gallup International in 2012 asked people questions such as "Irrespective of whether you attend a place of worship or not, would you say you are a religious person, not a religious person or a convinced atheist?" In this lab we take a look at the atheism survey data and explore what's at play when making inference about population proportions using categorical data.
+
+## The survey
+
+The press release for the poll is available on the class repository. Take a moment to review the report then answer the following questions.
+
+1.  On page 2, several key findings are reported. Do these 
+percentages appear to be *sample statistics* or *population   parameters*?
+
+**Your answer**: 
+
+
+
+2.  The title of the report is "Global Index of Religiosity and Atheism". To generalize the report's findings to the global human population, what must we assume about the sampling method? Does that seem like a reasonable assumption?
+
+**Your answer**: 
+
+
+
+## The data
+
+Turn your attention to Table 6 (pages 14 and 15), which reports the
+sample size and response percentages for all 57 countries. While this is a useful format to summarize the data, we will base our analysis on the original data set of individual responses to the survey. Load this data set into R with the following command. The name of the data frame is `atheism`. 
+ 
+
+```{r head-data, eval=FALSE}
+download.file("http://www.openintro.org/stat/data/atheism.RData", destfile = "atheism.RData")
+load("atheism.RData")
+```
+
+3.  What does each row of Table 6 correspond to? What does each row of `atheism` correspond to?
+
+**Your answer**: 
+
+
+
+Using the command below, create a new dataframe called `us12` that contains only the rows in `atheism` associated with respondents to the 2012 survey from the United States. 
+
+```{r us-atheism, eval=FALSE}
+us12 <- subset(atheism, nationality == "United States" & year == "2012")
+```
+
+Next, calculate the proportion of atheist responses. 
+
+```{r}
+####################################
+# TODO 1:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the proportion of      #
+# atheist responses in `us12`.     #
+#                                  #
+####################################
+
+```
+
+4. Does it agree with the percentage in Table 6?
+
+**Your answer**
+
+
+## Inference on proportions
+
+5.  Write out the conditions for inference to construct a 95% confidence interval for the proportion of atheists in the United States in 2012. Are you confident all conditions are met?
+
+**Your answer**: 
+
+
+
+If the conditions for inference are reasonable, we can calculate the standard error and construct the confidence interval.
+
+```{r}
+####################################
+# TODO 2:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the 95% confidence     #
+# interval for the proportion of   #
+# atheist responses in `us12`.     #
+#                                  #
+####################################
+
+```
+
+Note that a "success" here is a response of `"atheist"`.
+
+Although formal confidence intervals and hypothesis tests don't show up in the report, suggestions of inference appear at the bottom of page 6: "In general, 
+the error margin for surveys of this kind is $\pm$ 3-5% at 95% confidence".
+
+6. Per the output in TODO 2, what is the margin of error for the estimate of the proportion of atheists in US in 2012?
+
+**Your answer**: 
+
+
+
+## Success-failure condition
+
+The textbook emphasizes that you must always check conditions before making inference. For inference on proportions, the sample proportion can be assumed to be nearly normal if it is based upon a random sample of independent 
+observations and if both $np \geq 10$ and $n(1 - p) \geq 10$. This rule of thumb is easy enough to follow, but it makes one wonder: what's so special about the number 10?
+
+The short answer is: nothing. You could argue that we would be fine with 9 or that we really should be using 11. What is the "best" value for such a rule of thumb is, at least to some degree, arbitrary. However, when $np$ and $n(1-p)$ 
+reaches 10 the sampling distribution is sufficiently normal to use confidence intervals and hypothesis tests that are based on that approximation.
+
+We can investigate the interplay between $n$ and $p$ and the shape of the sampling distribution by using simulations. To start off, we simulate the process of drawing 5000 samples of size 1040 from a population with a true atheist proportion of 0.1. For each of the 5000 samples we compute $\hat{p}$ and then plot a histogram to visualize their distribution.
+
+```{r sim-np, eval=FALSE}
+p <- 0.1
+n <- 1040
+p_hats <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats[i] <- sum(samp == "atheist")/n
+}
+
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+```
+
+These commands build up the sampling distribution of $\hat{p}$ using the `for` loop. You can read the sampling procedure for the first line of code inside the `for` loop as, "take a sample of size $n$ with replacement from the choices of atheist and non-atheist with probabilities $p$ and $1 - p$, respectively." The second line in the loop says, "calculate the proportion of 
+atheists in this sample and record this value." The loop allows us to repeat this process 5,000 times to build a good representation of the sampling distribution.
+
+7.  Describe the sampling distribution of sample proportions at $n = 1040$ and $p = 0.1$. Be sure to note the center, spread, and shape. You may compute important statistics to help you interpret the distribution.
+
+**Your answer**    
+
+
+
+Repeat the above simulation three more times but with modified sample sizes and proportions: for $n = 400$ and $p = 0.1$, $n = 1040$ and $p = 0.02$, and $n = 400$ and $p = 0.02$. 
+
+```{r, eval=FALSE}
+par(mfrow = c(2,2))
+
+p <- 0.1
+n <- 1040
+p_hats <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats[i] <- sum(samp == "atheist")/n
+}
+
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+
+####################################
+# TODO 3:                          #   
+#                                  #
+# Write R code in this code chunk  #
+# to output the 3 sampling         #
+# distribution of sample           #
+# proportions with modified        #
+# sample size and population       #
+# proportion given above. You may  #
+# change the `xlim` argument in    #
+# the `hist` function.             #
+#                                  #
+####################################
+
+
+
+
+```
+
+You may need to expand the plot window to accommodate the larger two-by-two plot. Examine the three new sampling distributions. 
+
+8. Based on these limited plots, how does $n$ appear to affect the 
+distribution of $\hat{p}$? How does $p$ affect the sampling distribution?
+
+**Your answer**
+
+
+Once you're done, run the code chunk below to reset the layout of the plotting window.
+
+```{r}
+par(mfrow = c(1, 1))
+```
+
+9. If you refer to Table 6, you'll find that Australia has a sample
+proportion of 0.1 on a sample size of 1040, and that Ecuador has a sample proportion of 0.02 on 400 subjects. Let's suppose for this exercise that these point estimates are actually the truth. Then given the shape of their respective sampling distributions, do you think it is sensible to proceed with inference and report margin of errors, as the reports does?
+
+**Your answer**
+
