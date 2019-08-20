@@ -252,17 +252,24 @@ Apply the `inference` function
 * Confidence interval
 
 ```{r}
-inference(sp, est = "proportion", success = "yes", method = "theoretical", conflevel = 0.9, type = "ci")
+library(statsr)
+```
+
+```{r}
+# convert sp to a dataframe
+sp = data.frame(sp)
+names(sp) = "x"
+inference(y = x, data = sp, statistic = "proportion", success = "yes", method = "theoretical", conf_level = 0.9, type = "ci")
 ```
 
 * Two-sided Hypothesis Testing
 
 ```{r}
-inference(sp, est = "proportion", success = "yes", method = "simulation", type = "ht", null = 0.88, alternative = "twosided")
+inference(y = x, data = sp, statistic = "proportion", success = "yes", method = "simulation", type = "ht", sig_level = 0.05, null = 0.88, alternative = "twosided")
 ```
 
 * One-sided Hypothesis Testing
 
 ```{r}
-inference(sp, est = "proportion", success = "yes", method = "simulation", type = "ht", null = 0.88, alternative = "greater")
+inference(y = x, data = sp, statistic = "proportion", success = "yes", method = "simulation", type = "ht", sig_level = 0.05, null = 0.88, alternative = "greater")
 ```
