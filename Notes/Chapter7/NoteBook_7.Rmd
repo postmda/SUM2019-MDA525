@@ -1,0 +1,197 @@
+---
+title: "R Notebook_7"
+output: html_document
+html_notebook: default
+df_print: paged
+date: August 21, 2019
+---
+
+```{r setup, include = F}
+chooseCRANmirror(graphics = F, ind = 1)
+knitr::opts_chunk$set(echo = T)
+```
+
+# Chapter 7 Inference for Numerical Data
+
+## A Population Mean
+
+Chapter 7 Exercise 1
+
+n = 50
+xbar = 7.0
+s = 1.4
+alpha = 0.05
+
+* One-sided Hypothesis Testing 
+null: mu = 6.5
+alternative: mu > 6.5
+
+```{r}
+# sample size
+n <- 50
+# sample mean & standard deviation
+xbar <- 7.0
+s <- 1.4
+# significance level
+alpha <- 0.05
+
+# hypothesized parameter
+muo <- 6.5
+# t-statistic
+t <- (xbar - muo) / (s / sqrt(n))
+# p-value P(T > t)
+pv <- pt(t, n - 1, lower.tail = F)
+pv
+```
+
+* 95% Confidence Interval 
+
+```{r}
+# sample size
+n <- 50
+# sample mean & standard deviation
+xbar <- 7.0
+s <- 1.4
+# significance level
+alpha <- 0.05
+
+# standard error
+se <- s / sqrt(n)
+# margin of error
+me <- qt(alpha / 2, n - 1, lower.tail = F) * se
+# lower confidence limit
+lcl <- xbar - me
+# upper confidence limit
+ucl <- xbar + me
+lcl
+ucl
+```
+
+## Difference of Two Population Means
+
+Chapter 7 Exercise 2
+
+men_x = {8, 7, 10, 5, 7}
+women_x = {9, 5, 12, 8}
+alpha = 0.05
+
+* One-sided Hypothesis Testing 
+
+Hypotheses
+null: mu1 - mu2 = 0
+alternative: mu1 - mu2 < 0
+
+```{r}
+# data sets
+men_x <- c(8, 7, 10, 5, 7)
+women_x <- c(9, 5, 12, 8)
+
+# sample sizes
+n1 <- length(men_x)
+n2 <- length(women_x)
+
+# sample means
+xbar1 <- mean(men_x)
+xbar2 <- mean(women_x)
+s1 <- sd(men_x)
+s2 <- sd(women_x)
+
+# sample difference
+xbardiff <- xbar1 - xbar2
+# standard error
+se <- sqrt(s1 ** 2 / n1 + s2 ** 2 / n2)
+# test statistic
+t <- xbardiff / se
+
+# margin of error
+df <- min(n1 - 1, n2 - 1)
+# pv = P(T < t)
+pv <- pt(t, df)
+pv
+```
+
+
+* 95% Confidence Interval 
+
+```{r}
+# data sets
+men_x <- c(8, 7, 10, 5, 7)
+women_x <- c(9, 5, 12, 8)
+
+# sample sizes
+n1 <- length(men_x)
+n2 <- length(women_x)
+
+# sample means
+xbar1 <- mean(men_x)
+xbar2 <- mean(women_x)
+s1 <- sd(men_x)
+s2 <- sd(women_x)
+
+# significance level
+alpha <- 0.05
+
+# sample difference
+xbardiff <- xbar1 - xbar2
+# standard error
+se <- sqrt(s1 ** 2 / n1 + s2 ** 2 / n2)
+
+# margin of error
+df <- min(n1 - 1, n2 - 1)
+me <- qt(alpha / 2, df, lower.tail = F) * se
+
+# lower confidence limit
+lcl <- xbardiff - me
+# upper confidence limit
+ucl <- xbardiff + me
+lcl
+ucl
+```
+
+## Analysis of Variance
+
+Chapter 7 Exercise 3
+
+3 groups
+
+Sample size  160   205   64
+Sample mean  0.32  0.318  0.302
+Smaple SD    0.043 0.038  0.038
+
+```{r}
+
+# number of groups
+k <- 3
+
+# sample sizes
+szs <- c(160, 205, 64)
+n <- sum(szs)
+
+# sample means
+means <- c(0.32, 0.318, 0.302)
+xbar <- sum(szs * means) / n  
+
+# sample sds
+sds <- c(0.043, 0.038, 0.038)
+
+# sum of squares between groups
+SSG <- sum(szs * (means - xbar) ** 2)
+
+# mean square between groups
+MSG <- SSG / (k - 1)
+
+# sum of squared errors
+SSE <- sum((szs - 1) * sds ** 2)
+
+# mean squared error
+MSE <- SSE / (n - k)
+
+# test statistic 
+f <- MSG / MSE
+dfg <- k - 1
+dfe <- n - k
+
+# pv = P(F > f)
+pv <- pf(f, dfg, dfe, lower.tail = F)
+pv
+```

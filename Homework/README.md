@@ -1,5 +1,10 @@
 # Homework
 
+# Homework 7 due August 26
+1. Read Text Sections 6.1, 7.1 and 7.2 .  
+2. Complete Assignment 4. You may turn in a hard copy or submit an e-copy.
+3. Write Quiz 4 in the Quizzes folder. You may turn in a hard copy or submit an e-copy.
+
 ## Homework 6 due August 21
 1. Read Text Chapter 5.  
 2. Complete Assignment 3. You may turn in a hard copy or submit an e-copy.
